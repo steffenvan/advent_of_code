@@ -94,8 +94,8 @@ def bfs(matrix: List[List[int]], low_point: Tuple[int, int]) -> int:
 
 def part_1(content: List[str]) -> int:
     """
-    Finding the low points is pretty simple. Just check that every single entry
-    in the matrix is less than all its valid neighbours. 
+    Finding all the low points is pretty simple. Just check if a point's height
+    is lower than all of its valid neighbours. 
     """
     matrix = [[int(x) for x in numbers] for numbers in content]
     low_points = find_lowpoints(matrix)
