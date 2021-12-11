@@ -92,7 +92,7 @@ def get_oxygen_rating(matrix: List[List[str]], pos: int) -> List[List[str]]:
     return get_oxygen_rating(nums, pos + 1)
 
 
-def get_c02_rating(matrix: List[List[str]], pos: int) -> List[List[str]]:
+def get_co2_rating(matrix: List[List[str]], pos: int) -> List[List[str]]:
     """
     The least common bit is just the opposite of the most common bit. 
     """
@@ -103,7 +103,7 @@ def get_c02_rating(matrix: List[List[str]], pos: int) -> List[List[str]]:
     lc_bit = "0" if mc_bit == "1" else "1"
     nums = get_nums_with_bit_in_pos(matrix, pos, lc_bit)
 
-    return get_c02_rating(nums, pos + 1)
+    return get_co2_rating(nums, pos + 1)
 
 
 def to_dec(bit: str) -> int:
@@ -115,15 +115,15 @@ def part_2(content: List[List[str]]) -> int:
     Follow the rule of finding the most common/least common bit in each column.
     The least common is simply the opposite of the most common bit, so we can
     simply reuse the code there.  
-    get_oxygen_rating() and get_c02_rating both returns a List[List[str]]. 
+    get_oxygen_rating() and get_co2_rating both returns a List[List[str]]. 
     Since we assume that all the binary numbers in the input is unique, we know
     that these functions return a List[List[str]] with one element in the end. 
     """
 
     oxygen_rating = get_oxygen_rating(content, 0)[0]
-    c02_rating = get_c02_rating(content, 0)[0]
+    co2_rating = get_co2_rating(content, 0)[0]
 
-    return to_dec(oxygen_rating) * to_dec(c02_rating)
+    return to_dec(oxygen_rating) * to_dec(co2_rating)
 
 
 if __name__ == "__main__":
