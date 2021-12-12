@@ -58,7 +58,7 @@ class BingoBoard:
         return num_to_c_map
 
 
-def read_input(filename) -> List[str]:
+def read_input(filename: str) -> List[str]:
     path_to_input = Path(__file__).parent / filename
     with open(path_to_input) as f:
         content = f.readlines()
