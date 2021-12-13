@@ -52,8 +52,8 @@ def mark_non_diagonal_line(
     grid: List[List[int]], source: Point, dest: Point
 ) -> List[List[int]]:
     """
-    The 'smaller' point is always source because we sort them
-    non_diagonals."
+    The 'smaller' point is source because we compare the x-coordinate before the y. 
+    If source.x == dest.x, we know that source.y < dest.y. 
     """
     if source.x != dest.x:
         for j in range(source.x, dest.x + 1):
@@ -65,7 +65,9 @@ def mark_non_diagonal_line(
     return grid
 
 
-def mark_diagonal_line(grid, source, dest) -> List[List[int]]:
+def mark_diagonal_line(
+    grid: List[List[int]], source: Point, dest: Point
+) -> List[List[int]]:
     """
     We know that the Point with a smaller x value is source.
     So we just need to check if source.y needs to be moved up or down.
@@ -109,10 +111,6 @@ def part_2(points: List[List[Point]]) -> int:
     non_diagonals, diagonals = get_points(points)
     grid = [[0 for _ in range(max_x)] for _ in range(max_y)]
 
-    # for the non-diagonal lines, we know that if the source and destination
-    # x-values aren't equal, source.x < dest.x
-    # and if they are equal, we know that the point with the smallest y value
-    # will be 'source' because of our custom sorting
     for source, dest in non_diagonals:
         grid = mark_non_diagonal_line(grid, source, dest)
 
