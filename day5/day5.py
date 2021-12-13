@@ -27,7 +27,7 @@ def get_grid_size(points: List[List[Point]]) -> Tuple[int, int]:
     return max_x + 1, max_y + 1
 
 
-def get_points(
+def get_lines(
     points: List[List[Point]],
 ) -> Tuple[List[List[Point]], List[List[Point]]]:
     """
@@ -97,7 +97,7 @@ def count_overlapping_lines(grid: List[List[int]]) -> int:
 
 def part_1(points: List[List[Point]]) -> int:
     max_x, max_y = get_grid_size(points)
-    non_diagonals, _ = get_points(points)
+    non_diagonals, _ = get_lines(points)
     grid = [[0 for _ in range(max_x)] for _ in range(max_y)]
 
     for source, dest in non_diagonals:
@@ -108,7 +108,7 @@ def part_1(points: List[List[Point]]) -> int:
 
 def part_2(points: List[List[Point]]) -> int:
     max_x, max_y = get_grid_size(points)
-    non_diagonals, diagonals = get_points(points)
+    non_diagonals, diagonals = get_lines(points)
     grid = [[0 for _ in range(max_x)] for _ in range(max_y)]
 
     for source, dest in non_diagonals:
