@@ -1,78 +1,24 @@
-from collections import defaultdict
-from typing import List, Tuple, Union, Dict
+from typing import List, Union, Tuple
 from pathlib import Path
-
-# represent each board with a hash map. num -> coordinates.
-# assuming a number can only appear once in each board.
+from bingo_board import BingoBoard
 
 
-class BingoBoard:
-    """
-    This class represents each individual bingo board. Internally, it has its
-    own representation of the original, along with a dictionary that maps from 
-    a bingo number to the (i, j) coordinate it is on the board. 
-    We also store a boolean 2D-list to represents the positions that have been
-    marked. 
-    """
-
-    def __init__(self, board: List[List[str]]):
-        self.board = board
-        self.num_to_coordinate = self._num_to_coordinate(board)
-        self.boolean_board = [
-            [False for _ in range(len(board[0]))] for _ in range(len(board))
-        ]
-
-    def mark(self, num: int) -> Union[Tuple[int, int], None]:
-        """
-        Returns the coordinates of the number in the board if the number 
-        is in this board. 
-        """
-        if num in self.num_to_coordinate:
-            x, y = self.num_to_coordinate[num]
-            self.boolean_board[x][y] = True
-            return x, y
-
-        return None
-
-    def has_won(self, x: int, y: int) -> bool:
-        curr_row = self.boolean_board[x]
-        column = [row[y] for row in self.boolean_board]
-        return all(curr_row) or all(column)
-
-    def sum_of_unmarked(self) -> int:
-        unmarked_sum = 0
-        for i in range(len(self.boolean_board)):
-            for j in range(len(self.boolean_board[0])):
-                if not self.boolean_board[i][j]:
-                    unmarked_sum += int(self.board[i][j])
-
-        return unmarked_sum
-
-    def _num_to_coordinate(self, board: List[List[str]]) -> Dict[int, Tuple[int, int]]:
-        num_to_c_map = defaultdict(tuple)
-        for i in range(len(board)):
-            for j in range(len(board[0])):
-                num = board[i][j]
-                num_to_c_map[num] = (i, j)
-
-        return num_to_c_map
-
-
-def read_input(filename: str) -> List[str]:
+def read_input(filename: str) -> Tuple[List[int], List[str]]:
     path_to_input = Path(__file__).parent / filename
     with open(path_to_input) as f:
         content = f.readlines()
 
     content = [row.strip("\n") for row in content]
-    bingo_nums = [x for x in content[0].split(",")]
+    bingo_nums = [int(x) for x in content[0].split(",")]
+
     return bingo_nums, content[2:]
 
 
-def parse_board(boards: List[str]) -> List[List[str]]:
+def parse_board(boards: List[str]) -> List[List[int]]:
     """
     Because of the way we parse the input, we know that each board is separated
-    by an empty string. So when the curr row is empty, the next non-empty row 
-    will be a new board. 
+    by an empty string. So when the curr row is empty, the next non-empty row
+    will be a new board.
     """
     all_boards = []
     curr_board = []
@@ -80,6 +26,7 @@ def parse_board(boards: List[str]) -> List[List[str]]:
         if curr_row:
             row = curr_row.split(" ")
             row = list(filter(lambda x: len(x) > 0, row))
+            row = [int(x) for x in row]
             curr_board.append(row)
         else:
             if curr_board:
@@ -90,27 +37,32 @@ def parse_board(boards: List[str]) -> List[List[str]]:
     return all_boards
 
 
-def part_1(bingo_nums: List[int], bingo_boards: List[BingoBoard]) -> int:
+def part_1(bingo_nums: List[int], bingo_boards: List[BingoBoard]) -> Union[int, None]:
     for num in bingo_nums:
         for board in bingo_boards:
-            c = board.mark(num)
-            if c and board.has_won(c[0], c[1]):
-                return board.sum_of_unmarked() * int(num)
+            coord = board.mark(num)
+            if coord and board.has_won(coord[0], coord[1]):
+                return board.sum_of_unmarked() * num
 
-    return 0
+    return None
 
 
-def part_2(bingo_nums: List[int], bingo_boards: List[BingoBoard]) -> int:
+def part_2(bingo_nums: List[int], bingo_boards: List[BingoBoard]) -> Union[int, None]:
+    """
+    We find the last winner by adding all the winners to a set and check if
+    the size of this set reaches the number of boards that are available.
+    """
     winners = set()
     for num in bingo_nums:
         for board in bingo_boards:
-            c = board.mark(num)
-            if c and board.has_won(c[0], c[1]):
+            coord = board.mark(num)
+            if coord and board.has_won(coord[0], coord[1]):
                 winners.add(board)
                 # last winning board
                 if len(winners) == len(bingo_boards):
-                    return board.sum_of_unmarked() * int(num)
-    return 0
+                    return board.sum_of_unmarked() * num
+
+    return None
 
 
 if __name__ == "__main__":
