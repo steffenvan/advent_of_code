@@ -5,7 +5,7 @@ from point import Point
 
 def get_list_of_points(content: List[str]) -> List[List[Point]]:
     """
-    Creating a list of pairs: (from: Point, to: Point) objects. 
+    Creating a list of pairs: (from: Point, to: Point) objects.
     """
     all_pairs = [pair.split(" -> ") for pair in content]
     return [[Point(point.split(",")) for point in pairs] for pairs in all_pairs]
@@ -32,17 +32,16 @@ def get_lines(
 ) -> Tuple[List[List[Point]], List[List[Point]]]:
     """
     We sort the source and destination pairs. First by the x-coordinate, then
-    by y. The function returns the point pairs into two different lists that 
-    represents the non_diagonal and diagonal lines. 
+    by y. The function returns the point pairs into two different lists that
+    represents the non_diagonal and diagonal lines.
     """
     non_diagonals = []
     diagonals = []
     for source, dest in points:
+        point_pair = sorted([source, dest], key=lambda p1: (p1.x, p1.y))
         if source.x == dest.x or source.y == dest.y:
-            point_pair = sorted([source, dest], key=lambda p1: (p1.x, p1.y))
             non_diagonals.append(point_pair)
         else:
-            point_pair = sorted([source, dest], key=lambda p1: (p1.x, p1.y))
             diagonals.append(point_pair)
 
     return non_diagonals, diagonals
@@ -52,8 +51,8 @@ def mark_non_diagonal_line(
     grid: List[List[int]], source: Point, dest: Point
 ) -> List[List[int]]:
     """
-    The 'smaller' point is source because we compare the x-coordinate before the y. 
-    If source.x == dest.x, we know that source.y < dest.y. 
+    The 'smaller' point is source because we compare the x-coordinate before the y.
+    If source.x == dest.x, we know that source.y < dest.y.
     """
     if source.x != dest.x:
         for j in range(source.x, dest.x + 1):
@@ -125,4 +124,3 @@ if __name__ == "__main__":
     points = get_list_of_points(content)
     print(part_1(points))
     print(part_2(points))
-
